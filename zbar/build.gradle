@@ -1,4 +1,5 @@
 apply plugin: rootProject.ext.plugins.library
+apply plugin: rootProject.ext.plugins.kotlin
 
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
@@ -37,4 +38,8 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile rootProject.ext.dependencies.kotlin_jdk7
+}
+repositories {
+    mavenCentral()
 }

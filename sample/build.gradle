@@ -1,4 +1,5 @@
 apply plugin: rootProject.ext.plugins.application
+apply plugin: rootProject.ext.plugins.kotlin
 
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
@@ -27,4 +28,8 @@ dependencies {
     compile rootProject.ext.dependencies.appcompat
     compile rootProject.ext.dependencies.design
     compile rootProject.ext.dependencies.permission
+    compile rootProject.ext.dependencies.kotlin_jdk7
+}
+repositories {
+    mavenCentral()
 }
