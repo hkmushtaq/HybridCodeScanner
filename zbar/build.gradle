@@ -3,7 +3,6 @@ apply plugin: rootProject.ext.plugins.kotlin
 
 android {
     compileSdkVersion rootProject.ext.android.compileSdkVersion
-    buildToolsVersion rootProject.ext.android.buildToolsVersion
 
     defaultConfig {
         minSdkVersion rootProject.ext.android.libraryMinSdkVersion
@@ -39,7 +38,4 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile rootProject.ext.dependencies.kotlin_jdk7
-}
-repositories {
-    mavenCentral()
 }

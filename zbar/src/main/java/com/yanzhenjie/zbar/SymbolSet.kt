@@ -23,71 +23,57 @@
  *  http://sourceforge.net/projects/zbar
  *------------------------------------------------------------------------*/
 
-package com.yanzhenjie.zbar;
+package com.yanzhenjie.zbar
 
 /**
  * Immutable container for decoded result symbols associated with an image
  * or a composite symbol.
  */
-@SuppressWarnings("JniMissingFunction")
-public class SymbolSet
-        extends java.util.AbstractCollection<Symbol> {
-    /**
-     * C pointer to a zbar_symbol_set_t.
-     */
-    private long peer;
+class SymbolSet internal constructor(private var peer: Long) : java.util.AbstractCollection<Symbol>() {
 
-    static {
-        System.loadLibrary("zbar");
-        init();
-    }
-
-    private static native void init();
-
-    /**
-     * SymbolSets are only created by other package methods.
-     */
-    SymbolSet(long peer) {
-        this.peer = peer;
-    }
-
-    protected void finalize() {
-        destroy();
-    }
+    protected fun finalize() = destroy()
 
     /**
      * Clean up native data associated with an instance.
      */
-    public synchronized void destroy() {
-        if (peer != 0) {
-            destroy(peer);
-            peer = 0;
+    @Synchronized
+    fun destroy() {
+        if (peer != 0L) {
+            destroy(peer)
+            peer = 0
         }
     }
 
     /**
      * Release the associated peer instance.
      */
-    private native void destroy(long peer);
+    private external fun destroy(peer: Long)
 
     /**
      * Retrieve an iterator over the Symbol elements in this collection.
      */
-    public java.util.Iterator<Symbol> iterator() {
-        long sym = firstSymbol(peer);
-        if (sym == 0)
-            return (new SymbolIterator(null));
+    override fun iterator(): SymbolIterator {
+        val sym = firstSymbol(peer)
+        return if (sym == 0L) SymbolIterator(null) else SymbolIterator(Symbol(sym))
 
-        return (new SymbolIterator(new Symbol(sym)));
     }
 
-    /**
-     * Retrieve the number of elements in the collection.
-     */
-    public native int size();
+    override val size: Int
+        external get
 
     /**
      * Retrieve C pointer to first symbol in the set.
      */
-    private native long firstSymbol(long peer);
+    private external fun firstSymbol(peer: Long): Long
+
+    companion object {
+
+        init {
+            System.loadLibrary("zbar")
+            init()
+        }
+
+        @JvmStatic
+        private external fun init()
+    }
 }

@@ -23,22 +23,22 @@
  *  http://sourceforge.net/projects/zbar
  *------------------------------------------------------------------------*/
 
-package com.yanzhenjie.zbar;
+package com.yanzhenjie.zbar
 
 /**
  * Decoder symbology modifiers.
  */
-public class Modifier {
+object Modifier {
     /**
      * barcode tagged as GS1 (EAN.UCC) reserved
      * (eg, FNC1 before first data character).
      * data may be parsed as a sequence of GS1 AIs
      */
-    public static final int GS1 = 0;
+    const val GS1 = 0
 
     /**
      * barcode tagged as AIM reserved
      * (eg, FNC1 after first character or digit pair)
      */
-    public static final int AIM = 1;
+    const val AIM = 1
 }

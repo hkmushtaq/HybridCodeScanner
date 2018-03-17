@@ -23,63 +23,53 @@
  *  http://sourceforge.net/projects/zbar
  *------------------------------------------------------------------------*/
 
-package com.yanzhenjie.zbar;
+package com.yanzhenjie.zbar
 
 /**
  * Read barcodes from 2-D images.
  */
-@SuppressWarnings("JniMissingFunction")
-public class ImageScanner {
+class ImageScanner {
+
+    /**
+     * Retrieve decode results for last scanned image.
+     *
+     * @returns the SymbolSet result container
+     */
+    val results: SymbolSet
+        get() = SymbolSet(getResults(peer))
+
     /**
      * C pointer to a zbar_image_scanner_t.
      */
-    private long peer;
+    private var peer: Long = 0
 
-    static {
-        System.loadLibrary("zbar");
-        init();
-    }
-
-    private static native void init();
-
-    public ImageScanner() {
-        peer = create();
-    }
-
-    /**
-     * Create an associated peer instance.
-     */
-    private native long create();
-
-    protected void finalize() {
-        destroy();
+    constructor() {
+        peer = create()
     }
 
     /**
      * Clean up native data associated with an instance.
      */
-    public synchronized void destroy() {
-        if (peer != 0) {
-            destroy(peer);
-            peer = 0;
+    @Synchronized
+    fun destroy() {
+        if (peer != 0L) {
+            destroy(peer)
+            peer = 0
         }
     }
 
-    /**
-     * Destroy the associated peer instance.
-     */
-    private native void destroy(long peer);
+    protected fun finalize() = destroy()
 
     /**
      * Set config for indicated symbology (0 for all) to specified value.
      */
-    public native void setConfig(int symbology, int config, int value)
-            throws IllegalArgumentException;
+    @Throws(IllegalArgumentException::class)
+    external fun setConfig(symbology: Int, config: Int, value: Int)
 
     /**
      * Parse configuration string and apply to image scanner.
      */
-    public native void parseConfig(String config);
+    external fun parseConfig(config: String)
 
     /**
      * Enable or disable the inter-image result cache (default disabled).
@@ -88,18 +78,7 @@ public class ImageScanner {
      * checking and hysteresis to the results.  Invoking this method also
      * clears the cache.
      */
-    public native void enableCache(boolean enable);
-
-    /**
-     * Retrieve decode results for last scanned image.
-     *
-     * @returns the SymbolSet result container
-     */
-    public SymbolSet getResults() {
-        return (new SymbolSet(getResults(peer)));
-    }
-
-    private native long getResults(long peer);
+    external fun enableCache(enable: Boolean)
 
     /**
      * Scan for symbols in provided Image.
@@ -107,5 +86,27 @@ public class ImageScanner {
      *
      * @returns the number of symbols successfully decoded from the image.
      */
-    public native int scanImage(Image image);
+    external fun scanImage(image: Image): Int
+
+    private external fun getResults(peer: Long): Long
+
+    /**
+     * Destroy the associated peer instance.
+     */
+    private external fun destroy(peer: Long)
+
+    /**
+     * Create an associated peer instance.
+     */
+    private external fun create(): Long
+
+    companion object {
+        init {
+            System.loadLibrary("zbar")
+            init()
+        }
+
+        @JvmStatic
+        private external fun init()
+    }
 }

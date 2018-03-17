@@ -23,54 +23,44 @@
  *  http://sourceforge.net/projects/zbar
  *------------------------------------------------------------------------*/
 
-package com.yanzhenjie.zbar;
+package com.yanzhenjie.zbar
 
 /**
  * Iterator over a SymbolSet.
  */
-public class SymbolIterator
-        implements java.util.Iterator<Symbol> {
-    /**
-     * Next symbol to be returned by the iterator.
-     */
-    private Symbol current;
+class SymbolIterator : MutableIterator<Symbol> {
 
-    /**
-     * SymbolIterators are only created by internal interface methods.
-     */
-    SymbolIterator(Symbol first) {
-        current = first;
+    private var current: Symbol?
+
+    constructor(first: Symbol?) {
+        this.current = first
     }
 
     /**
      * Returns true if the iteration has more elements.
      */
-    public boolean hasNext() {
-        return (current != null);
+    override fun hasNext(): Boolean {
+        return current != null
     }
 
     /**
      * Retrieves the next element in the iteration.
      */
-    public Symbol next() {
-        if (current == null)
-            throw (new java.util.NoSuchElementException
-                    ("access past end of SymbolIterator"));
-
-        Symbol result = current;
-        long sym = current.next();
-        if (sym != 0)
-            current = new Symbol(sym);
+    override fun next(): Symbol {
+        val result: Symbol =
+            current ?: throw NoSuchElementException("access past end of SymbolIterator")
+        val sym = result.next
+        if (sym != 0L)
+            current = Symbol(sym)
         else
-            current = null;
-        return (result);
+            current = null
+        return result
     }
 
     /**
      * Raises UnsupportedOperationException.
      */
-    public void remove() {
-        throw (new UnsupportedOperationException
-                ("SymbolIterator is immutable"));
+    override fun remove() {
+        throw UnsupportedOperationException("SymbolIterator is immutable")
     }
 }
